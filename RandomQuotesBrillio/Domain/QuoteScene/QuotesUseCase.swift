@@ -25,7 +25,7 @@ final class QuotesUseCase: QuotesUseCaseProtocol {
     }
     
     func fetchQuote(from endpoint: EndPoint, completion: @escaping (QuoteResult) -> Void) {
-        self.networkService.fetchQuote(from: endpoint) { result in
+        self.networkService.fetchData(from: endpoint) { result in
             switch result {
             case .success(let data, _):
                 do {

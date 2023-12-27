@@ -36,8 +36,9 @@ class QuoteCoordinator: Coordinator {
 
 class AuthorCoordinator: Coordinator {
     var childCoordinators: [Coordinator]
-    
     var navigationController: UINavigationController
+    
+    var authorSlug:String = ""
     
     init(navigationController: UINavigationController) {
         self.childCoordinators = []
@@ -45,8 +46,17 @@ class AuthorCoordinator: Coordinator {
     }
     
     func start() {
-        let authorDetails = AuthorDetailsVC()
+        let networkManager: NetworkServiceProtocol = Network()
+        let useCase: AuthorUseCaseProtocol = AuthorUseCase(networkService: networkManager)
+        let viewModel: AuthorVMProtocol = AuthorVM(authorUseCase: useCase, authorSlug: self.authorSlug)
+        let authorDetails = AuthorDetailsVC(vm: viewModel)
         self.navigationController.pushViewController(authorDetails, animated: true)
+    }
+}
+
+extension AuthorCoordinator {
+    func loadParameters(authorSlug:String) {
+        self.authorSlug = authorSlug
     }
 }
 
@@ -72,6 +82,7 @@ class AppCoordinator: Coordinator {
 extension AppCoordinator {
     func goToAuthorDetails(authorSlug:String = "") {
         let authorCoordinator = AuthorCoordinator(navigationController: navigationController)
+        authorCoordinator.loadParameters(authorSlug: authorSlug)
         authorCoordinator.start()
         childCoordinators.append(authorCoordinator)
     }

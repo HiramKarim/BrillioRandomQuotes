@@ -19,7 +19,7 @@ protocol output {
 
 protocol QuoteVMProtocol: input, output { }
 
-class QuoteVM: QuoteVMProtocol {
+final class QuoteVM: QuoteVMProtocol {
     var fetchDataCallback: ((String, String) -> Void)?
     var errorCallback: ((Error) -> Void)?
     

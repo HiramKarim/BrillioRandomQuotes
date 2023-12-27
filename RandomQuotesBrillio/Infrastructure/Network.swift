@@ -12,10 +12,9 @@ final class Network:NetworkServiceProtocol {
     func fetchData(from endpoint: EndPoint,
                    completion: @escaping (HTTPClientResult) -> Void) {
         
-        var stringPath = endpoint.path
-        let url = URL(string: stringPath)!
+        guard let request = endpoint.request else { return }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: request) { data, response, error in
             
             if let error = error {
                 completion(.failure(error))

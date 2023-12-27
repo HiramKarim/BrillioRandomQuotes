@@ -13,7 +13,7 @@ enum AuthorResult {
 }
 
 protocol AuthorUseCaseProtocol {
-    func fetchAuthorBio(usingAuthorSlug slug:String, from endpoint: EndPoint, completion: @escaping (AuthorResult) -> Void)
+    func fetchAuthorBio(from endpoint: EndPoint, completion: @escaping (AuthorResult) -> Void)
 }
 
 final class AuthorUseCase:AuthorUseCaseProtocol {
@@ -24,8 +24,7 @@ final class AuthorUseCase:AuthorUseCaseProtocol {
         self.networkService = networkService
     }
     
-    func fetchAuthorBio(usingAuthorSlug slug:String,
-                        from endpoint: EndPoint,
+    func fetchAuthorBio(from endpoint: EndPoint,
                         completion: @escaping (AuthorResult) -> Void) {
         self.networkService.fetchData(from: endpoint) { result in
             switch result {

@@ -36,6 +36,12 @@ class MainVC: UIViewController {
         return button
     }()
     
+    let authorDetailButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -73,6 +79,7 @@ class MainVC: UIViewController {
         self.view.addSubview(quoteLabel)
         self.view.addSubview(authorLabel)
         self.view.addSubview(refreshButton)
+        self.view.addSubview(authorDetailButton)
         self.view.addSubview(loadingIndicator)
         
         NSLayoutConstraint.activate([
@@ -89,12 +96,19 @@ class MainVC: UIViewController {
             refreshButton.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             refreshButton.heightAnchor.constraint(equalToConstant: 50),
             
+            authorDetailButton.topAnchor.constraint(equalTo: authorLabel.topAnchor),
+            authorDetailButton.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
+            authorDetailButton.trailingAnchor.constraint(equalTo: authorLabel.trailingAnchor),
+            authorDetailButton.bottomAnchor.constraint(equalTo: authorLabel.bottomAnchor),
+            
             loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
             loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0)
         ])
         
         refreshButton.addTarget(self, action: #selector(refreshQuote), for: .touchUpInside)
         refreshButton.layer.cornerRadius = 7
+        
+        authorDetailButton.addTarget(self, action: #selector(searchAuthor), for: .touchUpInside)
     }
     
     func configCallbacks() {
@@ -118,12 +132,19 @@ class MainVC: UIViewController {
     
     private func showError(error:Error) {
         stopLoadingIndicator()
-        let alert = UIAlertController(title: "Alert", message: "An error occur, pleace try again.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Alert",
+                                      message: "An error occur, pleace try again.",
+                                      preferredStyle: .alert)
         let confirmButton = UIAlertAction(title: "OK", style: .default)
         alert.addAction(confirmButton)
         DispatchQueue.main.async {
             self.present(alert, animated: true)
         }
+    }
+    
+    @objc
+    private func searchAuthor() {
+        //TODO: Move to show author details
     }
     
 }

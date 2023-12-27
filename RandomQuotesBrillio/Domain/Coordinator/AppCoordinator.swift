@@ -14,6 +14,10 @@ protocol Coordinator: AnyObject {
     func start()
 }
 
+protocol CoordinatorBackNavigation: AnyObject {
+    func back()
+}
+
 class QuoteCoordinator: Coordinator {
     var childCoordinators: [Coordinator]
     
@@ -34,6 +38,25 @@ class QuoteCoordinator: Coordinator {
     }
 }
 
+class AuthorCoordinator: Coordinator, CoordinatorBackNavigation {
+    var childCoordinators: [Coordinator]
+    
+    var navigationController: UINavigationController
+    
+    init(navigationController: UINavigationController) {
+        self.childCoordinators = []
+        self.navigationController = navigationController
+    }
+    
+    func start() {
+        
+    }
+    
+    func back() {
+        
+    }
+}
+
 
 class AppCoordinator: Coordinator {
     var childCoordinators: [Coordinator]
@@ -50,6 +73,12 @@ class AppCoordinator: Coordinator {
         quoteCoordinator.start()
         childCoordinators.append(quoteCoordinator)
     }
-    
-    
+}
+
+extension AppCoordinator {
+    func goToAuthorDetails() {
+        let authorCoordinator = AuthorCoordinator(navigationController: navigationController)
+        authorCoordinator.start()
+        childCoordinators.append(authorCoordinator)
+    }
 }

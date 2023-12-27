@@ -18,6 +18,7 @@
 		1F8A03F62B3B3D6300F2E889 /* QuoteVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8A03F52B3B3D6300F2E889 /* QuoteVM.swift */; };
 		1F8A03F82B3B3D8600F2E889 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8A03F72B3B3D8600F2E889 /* Network.swift */; };
 		1F8A03FA2B3B3DCE00F2E889 /* QuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8A03F92B3B3DCE00F2E889 /* QuoteModel.swift */; };
+		1F8ADE182B3CA8A50033CE80 /* AuthorDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8ADE172B3CA8A50033CE80 /* AuthorDetailsVC.swift */; };
 		1FA000832B3B750C002A6763 /* QuotesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000822B3B750C002A6763 /* QuotesUseCase.swift */; };
 		1FA000852B3B775C002A6763 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */; };
 		1FA000882B3B8AF9002A6763 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */; };
@@ -56,6 +57,7 @@
 		1F8A03F52B3B3D6300F2E889 /* QuoteVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteVM.swift; sourceTree = "<group>"; };
 		1F8A03F72B3B3D8600F2E889 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		1F8A03F92B3B3DCE00F2E889 /* QuoteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteModel.swift; sourceTree = "<group>"; };
+		1F8ADE172B3CA8A50033CE80 /* AuthorDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorDetailsVC.swift; sourceTree = "<group>"; };
 		1FA000822B3B750C002A6763 /* QuotesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotesUseCase.swift; sourceTree = "<group>"; };
 		1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -138,6 +140,14 @@
 			path = RandomQuotesBrillioUITests;
 			sourceTree = "<group>";
 		};
+		1F8ADE162B3CA8870033CE80 /* AuthorDetails */ = {
+			isa = PBXGroup;
+			children = (
+				1F8ADE172B3CA8A50033CE80 /* AuthorDetailsVC.swift */,
+			);
+			path = AuthorDetails;
+			sourceTree = "<group>";
+		};
 		1FA0007E2B3B6FCE002A6763 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +160,7 @@
 		1FA0007F2B3B6FD6002A6763 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				1F8ADE162B3CA8870033CE80 /* AuthorDetails */,
 				1F8A03F32B3B38B800F2E889 /* MainVC.swift */,
 			);
 			path = Presentation;
@@ -316,6 +327,7 @@
 				1F8A03F82B3B3D8600F2E889 /* Network.swift in Sources */,
 				1FA000882B3B8AF9002A6763 /* AppCoordinator.swift in Sources */,
 				1F8A03F42B3B38B800F2E889 /* MainVC.swift in Sources */,
+				1F8ADE182B3CA8A50033CE80 /* AuthorDetailsVC.swift in Sources */,
 				1F8A03F62B3B3D6300F2E889 /* QuoteVM.swift in Sources */,
 				1FA000852B3B775C002A6763 /* NetworkServiceProtocol.swift in Sources */,
 				1FA000832B3B750C002A6763 /* QuotesUseCase.swift in Sources */,

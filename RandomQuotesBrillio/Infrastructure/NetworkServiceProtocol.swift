@@ -14,6 +14,7 @@ public protocol EndPoint {
 
 enum API {
     case quotes
+    case author
 }
 
 extension API: EndPoint {
@@ -22,6 +23,8 @@ extension API: EndPoint {
         switch self {
         case .quotes:
             return "https://api.quotable.io/random"
+        case .author:
+            return "https://api.quotable.io/search/authors?query={author}"
         }
     }
     

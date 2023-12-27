@@ -10,11 +10,12 @@ import Foundation
 public protocol EndPoint {
     var path: String { get }
     var request: URLRequest? { get }
+    var parameters: [String:Any] { get }
 }
 
 enum API {
     case quotes
-    case author
+    case author(slug:String)
 }
 
 extension API: EndPoint {
@@ -24,12 +25,23 @@ extension API: EndPoint {
         case .quotes:
             return "https://api.quotable.io/random"
         case .author:
-            return "https://api.quotable.io/search/authors?query={author}"
+            return "https://api.quotable.io/authors/slug/\(parameters["slug"] ?? "")"
+        }
+    }
+    
+    var parameters: [String : Any] {
+        switch self {
+        case .quotes:
+            return [:]
+        case let .author(slug):
+            return ["slug": slug]
         }
     }
     
     var request: URLRequest? {
-        guard let url = URL(string: path) else { return nil }
+        guard var components = URLComponents(string: path) else { return nil }
+        components.queryItems = parameters.map { URLQueryItem(name: $0.key, value: "\($0.value)") }
+        guard let url = components.url else { return nil }
         return URLRequest(url: url)
     }
 }
@@ -45,5 +57,5 @@ public enum HTTPClientResult {
 }
 
 protocol NetworkServiceProtocol {
-    func fetchQuote(from endpoint: EndPoint, completion: @escaping (HTTPClientResult) -> Void)
+    func fetchData(from endpoint: EndPoint, completion: @escaping (HTTPClientResult) -> Void)
 }

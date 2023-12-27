@@ -10,4 +10,5 @@ import Foundation
 struct QuoteModel: Decodable {
     let content:String?
     let author:String?
+    let authorSlug:String?
 }

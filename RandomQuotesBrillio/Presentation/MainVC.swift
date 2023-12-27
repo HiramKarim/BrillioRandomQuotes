@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MainVC: UIViewController {
+final class MainVC: UIViewController {
     
     let quoteLabel:UILabel = {
         let label = UILabel()
@@ -49,15 +49,19 @@ class MainVC: UIViewController {
     }()
     
     var vm:QuoteVMProtocol?
+    var coordinator:AppCoordinator?
     
     deinit {
         vm?.fetchDataCallback = nil
         vm?.errorCallback = nil
         vm = nil
+        coordinator = nil
     }
     
-    init(vm: QuoteVMProtocol?) {
+    init(vm: QuoteVMProtocol?,
+         coordinator:AppCoordinator) {
         self.vm = vm
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -111,7 +115,7 @@ class MainVC: UIViewController {
         authorDetailButton.addTarget(self, action: #selector(searchAuthor), for: .touchUpInside)
     }
     
-    func configCallbacks() {
+    private func configCallbacks() {
         vm?.fetchDataCallback = reloadQuotes
         vm?.errorCallback = showError
     }
@@ -144,19 +148,19 @@ class MainVC: UIViewController {
     
     @objc
     private func searchAuthor() {
-        //TODO: Move to show author details
+        self.coordinator?.goToAuthorDetails(authorSlug: vm?.getAuthorSlug() ?? "")
     }
     
 }
 
 extension MainVC {
-    func startLoadingIndicator() {
+    private func startLoadingIndicator() {
         DispatchQueue.main.async {
             self.loadingIndicator.startAnimating()
         }
     }
     
-    func stopLoadingIndicator() {
+    private func stopLoadingIndicator() {
         DispatchQueue.main.async {
             self.loadingIndicator.stopAnimating()
         }

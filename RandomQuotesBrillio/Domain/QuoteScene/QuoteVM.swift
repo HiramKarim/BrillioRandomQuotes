@@ -14,16 +14,17 @@ protocol input {
 protocol output {
     var fetchDataCallback:((String, String) -> Void)? { get set }
     var errorCallback:((Error) -> Void)? { get set }
+    func getAuthorSlug() -> String
 }
 
-protocol QuoteVMProtocol: input, output {}
-
+protocol QuoteVMProtocol: input, output { }
 
 class QuoteVM: QuoteVMProtocol {
     var fetchDataCallback: ((String, String) -> Void)?
     var errorCallback: ((Error) -> Void)?
     
     private let useCase:QuotesUseCaseProtocol?
+    private var authorSlug = ""
     
     init(useCase: QuotesUseCaseProtocol) {
         self.useCase = useCase
@@ -37,12 +38,17 @@ class QuoteVM: QuoteVMProtocol {
             case .success(let quoteData):
                 quoteString = quoteData.content ?? ""
                 quoteAuthor = quoteData.author ?? ""
+                self?.authorSlug = quoteData.authorSlug ?? ""
                 self?.fetchDataCallback?(quoteString, quoteAuthor)
             case .failure(let error):
                 self?.errorCallback?(error)
                 break
             }
         })
+    }
+    
+    func getAuthorSlug() -> String {
+        return self.authorSlug
     }
     
 }

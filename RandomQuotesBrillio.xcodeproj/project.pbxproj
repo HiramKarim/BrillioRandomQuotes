@@ -19,6 +19,9 @@
 		1F8A03F82B3B3D8600F2E889 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8A03F72B3B3D8600F2E889 /* Network.swift */; };
 		1F8A03FA2B3B3DCE00F2E889 /* QuoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8A03F92B3B3DCE00F2E889 /* QuoteModel.swift */; };
 		1F8ADE182B3CA8A50033CE80 /* AuthorDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8ADE172B3CA8A50033CE80 /* AuthorDetailsVC.swift */; };
+		1F8ADE1B2B3CC0D50033CE80 /* AuthorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8ADE1A2B3CC0D50033CE80 /* AuthorModel.swift */; };
+		1F8ADE1D2B3CC0E40033CE80 /* AuthorVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8ADE1C2B3CC0E40033CE80 /* AuthorVM.swift */; };
+		1F8ADE1F2B3CC0F00033CE80 /* AuthorUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F8ADE1E2B3CC0F00033CE80 /* AuthorUseCase.swift */; };
 		1FA000832B3B750C002A6763 /* QuotesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000822B3B750C002A6763 /* QuotesUseCase.swift */; };
 		1FA000852B3B775C002A6763 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */; };
 		1FA000882B3B8AF9002A6763 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */; };
@@ -58,6 +61,9 @@
 		1F8A03F72B3B3D8600F2E889 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		1F8A03F92B3B3DCE00F2E889 /* QuoteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuoteModel.swift; sourceTree = "<group>"; };
 		1F8ADE172B3CA8A50033CE80 /* AuthorDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorDetailsVC.swift; sourceTree = "<group>"; };
+		1F8ADE1A2B3CC0D50033CE80 /* AuthorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorModel.swift; sourceTree = "<group>"; };
+		1F8ADE1C2B3CC0E40033CE80 /* AuthorVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorVM.swift; sourceTree = "<group>"; };
+		1F8ADE1E2B3CC0F00033CE80 /* AuthorUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorUseCase.swift; sourceTree = "<group>"; };
 		1FA000822B3B750C002A6763 /* QuotesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotesUseCase.swift; sourceTree = "<group>"; };
 		1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -148,9 +154,20 @@
 			path = AuthorDetails;
 			sourceTree = "<group>";
 		};
+		1F8ADE192B3CC0AB0033CE80 /* AuthorScene */ = {
+			isa = PBXGroup;
+			children = (
+				1F8ADE1A2B3CC0D50033CE80 /* AuthorModel.swift */,
+				1F8ADE1C2B3CC0E40033CE80 /* AuthorVM.swift */,
+				1F8ADE1E2B3CC0F00033CE80 /* AuthorUseCase.swift */,
+			);
+			path = AuthorScene;
+			sourceTree = "<group>";
+		};
 		1FA0007E2B3B6FCE002A6763 /* Domain */ = {
 			isa = PBXGroup;
 			children = (
+				1F8ADE192B3CC0AB0033CE80 /* AuthorScene */,
 				1FA000862B3B8AAC002A6763 /* Coordinator */,
 				1FA000812B3B7054002A6763 /* QuoteScene */,
 			);
@@ -326,6 +343,7 @@
 				1F8A03FA2B3B3DCE00F2E889 /* QuoteModel.swift in Sources */,
 				1F8A03F82B3B3D8600F2E889 /* Network.swift in Sources */,
 				1FA000882B3B8AF9002A6763 /* AppCoordinator.swift in Sources */,
+				1F8ADE1F2B3CC0F00033CE80 /* AuthorUseCase.swift in Sources */,
 				1F8A03F42B3B38B800F2E889 /* MainVC.swift in Sources */,
 				1F8ADE182B3CA8A50033CE80 /* AuthorDetailsVC.swift in Sources */,
 				1F8A03F62B3B3D6300F2E889 /* QuoteVM.swift in Sources */,
@@ -333,6 +351,8 @@
 				1FA000832B3B750C002A6763 /* QuotesUseCase.swift in Sources */,
 				1F8A03C42B3B380C00F2E889 /* AppDelegate.swift in Sources */,
 				1F8A03C62B3B380C00F2E889 /* SceneDelegate.swift in Sources */,
+				1F8ADE1B2B3CC0D50033CE80 /* AuthorModel.swift in Sources */,
+				1F8ADE1D2B3CC0E40033CE80 /* AuthorVM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

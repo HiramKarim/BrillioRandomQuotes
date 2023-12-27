@@ -48,6 +48,17 @@ final class MainVC: UIViewController {
         return indicator
     }()
     
+    let stackview: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = NSLayoutConstraint.Axis.vertical
+        stackView.distribution = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        stackView.spacing = 25
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     var vm:QuoteVMProtocol?
     var coordinator:AppCoordinator?
     
@@ -80,39 +91,32 @@ final class MainVC: UIViewController {
     private func configView() {
         self.view.backgroundColor = .white
         
-        self.view.addSubview(quoteLabel)
-        self.view.addSubview(authorLabel)
-        self.view.addSubview(refreshButton)
-        self.view.addSubview(authorDetailButton)
+        self.view.addSubview(stackview)
         self.view.addSubview(loadingIndicator)
         
+        stackview.addArrangedSubview(quoteLabel)
+        stackview.addArrangedSubview(authorLabel)
+        stackview.addArrangedSubview(refreshButton)
+        
         NSLayoutConstraint.activate([
-            quoteLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
-            quoteLabel.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 20),
-            quoteLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
-            quoteLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
+            stackview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
+            stackview.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0),
+            stackview.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
+            stackview.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
             
-            authorLabel.topAnchor.constraint(equalTo: quoteLabel.bottomAnchor, constant: 30),
-            authorLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
-
-            refreshButton.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 30),
-            refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
             refreshButton.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             refreshButton.heightAnchor.constraint(equalToConstant: 50),
             
-            authorDetailButton.topAnchor.constraint(equalTo: authorLabel.topAnchor),
-            authorDetailButton.leadingAnchor.constraint(equalTo: authorLabel.leadingAnchor),
-            authorDetailButton.trailingAnchor.constraint(equalTo: authorLabel.trailingAnchor),
-            authorDetailButton.bottomAnchor.constraint(equalTo: authorLabel.bottomAnchor),
-            
-            loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
-            loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0)
+            loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
         ])
         
         refreshButton.addTarget(self, action: #selector(refreshQuote), for: .touchUpInside)
         refreshButton.layer.cornerRadius = 7
         
-        authorDetailButton.addTarget(self, action: #selector(searchAuthor), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(searchAuthor))
+        authorLabel.isUserInteractionEnabled = true
+        authorLabel.addGestureRecognizer(tapGesture)
     }
     
     private func configCallbacks() {

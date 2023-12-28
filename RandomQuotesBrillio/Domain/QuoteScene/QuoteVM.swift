@@ -16,6 +16,8 @@ protocol output {
     var errorCallback:((Error) -> Void)? { get set }
     func getAuthorSlug(index:Int) -> String
     func getQuotesList() -> [QuoteModel]
+    func getQuotesListCount() -> Int
+    func getQuote(index: Int) -> QuoteModel
 }
 
 protocol QuoteVMProtocol: input, output { }
@@ -49,6 +51,14 @@ final class QuoteVM: QuoteVMProtocol {
     
     func getQuotesList() -> [QuoteModel] {
         return quotesList
+    }
+    
+    func getQuotesListCount() -> Int {
+        return quotesList.count
+    }
+    
+    func getQuote(index: Int) -> QuoteModel {
+        return quotesList[index]
     }
     
 }

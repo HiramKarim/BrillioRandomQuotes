@@ -9,7 +9,17 @@ import UIKit
 
 final class MainVC: UIViewController {
     
-    let quoteLabel:UILabel = {
+    private let cellIdentifier = "cell"
+    
+    private let tableview: UITableView = {
+        let tableview = UITableView(frame: .zero)
+        tableview.rowHeight = 50
+        tableview.estimatedRowHeight = 50
+        tableview.translatesAutoresizingMaskIntoConstraints = false
+        return tableview
+    }()
+    
+    private let quoteLabel:UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -19,14 +29,14 @@ final class MainVC: UIViewController {
         return label
     }()
     
-    let authorLabel:UILabel = {
+    private let authorLabel:UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let refreshButton: UIButton = {
+    private let refreshButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Refresh", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -36,19 +46,19 @@ final class MainVC: UIViewController {
         return button
     }()
     
-    let authorDetailButton: UIButton = {
+    private let authorDetailButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
-    let loadingIndicator: UIActivityIndicatorView = {
+    private let loadingIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView()
         indicator.translatesAutoresizingMaskIntoConstraints = false
         return indicator
     }()
     
-    let stackview: UIStackView = {
+    private let stackview: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = NSLayoutConstraint.Axis.vertical
         stackView.distribution = UIStackView.Distribution.equalSpacing
@@ -59,7 +69,7 @@ final class MainVC: UIViewController {
         return stackView
     }()
     
-    let quotesNumberTextfield: UITextField = {
+    private let quotesNumberTextfield: UITextField = {
         let textview = UITextField()
         textview.text = "1"
         textview.font = UIFont.systemFont(ofSize: 25)
@@ -70,8 +80,8 @@ final class MainVC: UIViewController {
         return textview
     }()
     
-    var vm:QuoteVMProtocol?
-    var coordinator:AppCoordinator?
+    private var vm:QuoteVMProtocol?
+    private var coordinator:AppCoordinator?
     
     deinit {
         vm?.fetchDataCallback = nil
@@ -120,8 +130,10 @@ final class MainVC: UIViewController {
         
         stackview.addArrangedSubview(quoteLabel)
         stackview.addArrangedSubview(authorLabel)
-        stackview.addArrangedSubview(refreshButton)
-        stackview.addArrangedSubview(quotesNumberTextfield)
+        
+        self.view.addSubview(tableview)
+        self.view.addSubview(refreshButton)
+        self.view.addSubview(quotesNumberTextfield)
         
         NSLayoutConstraint.activate([
             stackview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
@@ -129,9 +141,18 @@ final class MainVC: UIViewController {
             stackview.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
             stackview.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
             
+            tableview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
+            tableview.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0),
+            tableview.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
+            tableview.heightAnchor.constraint(equalToConstant: 150),
+            
+            refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
+            refreshButton.topAnchor.constraint(equalTo: stackview.bottomAnchor, constant: 25),
             refreshButton.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             refreshButton.heightAnchor.constraint(equalToConstant: 50),
             
+            quotesNumberTextfield.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
+            quotesNumberTextfield.topAnchor.constraint(equalTo: refreshButton.bottomAnchor, constant: 25),
             quotesNumberTextfield.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             quotesNumberTextfield.heightAnchor.constraint(equalToConstant: 50),
             
@@ -153,10 +174,16 @@ final class MainVC: UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
+        
+        tableview.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableview.isHidden = true
+        tableview.delegate = self
+        tableview.dataSource = self
     }
     
     @objc
     private func refreshQuote() {
+        dismissKeyboard()
         startLoadingIndicator()
         
         if getLimitAmount() == 0 || getLimitAmount() > 50 {
@@ -175,19 +202,23 @@ final class MainVC: UIViewController {
     }
     
     private func loadQuote(quoteData:[QuoteModel]) {
-        
         stopLoadingIndicator()
-        
         if quoteData.count > 1 {
-            //TODO: show quote list
+            DispatchQueue.main.async {
+                self.stackview.isHidden = true
+                self.tableview.isHidden = false
+                self.tableview.reloadData()
+            }
+            
         } else {
             let quote = quoteData.first!
             DispatchQueue.main.async {
+                self.stackview.isHidden = false
+                self.tableview.isHidden = true
                 self.quoteLabel.text = quote.content ?? ""
                 self.authorLabel.text = quote.author ?? ""
             }
         }
-        
     }
     
     private func showError(error:Error) {
@@ -278,5 +309,25 @@ extension MainVC {
         DispatchQueue.main.async {
             self.present(alert, animated: true)
         }
+    }
+}
+
+extension MainVC: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return vm?.getQuotesListCount() ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
+        let quote = vm?.getQuote(index: indexPath.row)
+        cell.textLabel?.text = "\(quote?.content ?? "") - \(quote?.author ?? "")"
+        
+        return cell
+    }
+}
+
+extension MainVC: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        searchAuthor(at: indexPath.row)
     }
 }

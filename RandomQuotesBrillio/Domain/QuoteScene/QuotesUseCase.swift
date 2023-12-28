@@ -8,7 +8,7 @@
 import Foundation
 
 enum QuoteResult {
-    case success(QuoteModel)
+    case success([QuoteModel])
     case failure(Error)
 }
 
@@ -29,7 +29,7 @@ final class QuotesUseCase: QuotesUseCaseProtocol {
             switch result {
             case .success(let data, _):
                 do {
-                    let quoteData = try JSONDecoder().decode(QuoteModel.self, from: data)
+                    let quoteData = try JSONDecoder().decode([QuoteModel].self, from: data)
                     completion(.success(quoteData))
                 } catch let error {
                     completion(.failure(error))
@@ -39,6 +39,4 @@ final class QuotesUseCase: QuotesUseCaseProtocol {
             }
         }
     }
-    
-    
 }

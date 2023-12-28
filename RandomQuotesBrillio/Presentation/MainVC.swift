@@ -142,7 +142,7 @@ final class MainVC: UIViewController {
         refreshButton.addTarget(self, action: #selector(refreshQuote), for: .touchUpInside)
         refreshButton.layer.cornerRadius = 7
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(searchAuthor))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(showAuthorDetail))
         authorLabel.isUserInteractionEnabled = true
         authorLabel.addGestureRecognizer(tapGesture)
         
@@ -151,7 +151,6 @@ final class MainVC: UIViewController {
         quotesNumberTextfield.layer.cornerRadius = 7
         quotesNumberTextfield.delegate = self
         
-        //Looks for single or multiple taps.
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
@@ -159,39 +158,55 @@ final class MainVC: UIViewController {
     @objc
     private func refreshQuote() {
         startLoadingIndicator()
-        vm?.fetchQuote(completion: { [weak self] result in
-            switch result {
-            case .success(let quote):
-                self?.loadQuote(quote: quote.content ?? "", author: quote.author ?? "")
-            case .failure(let error):
-                self?.showError(error: error)
-            }
-        })
+        
+        if getLimitAmount() == 0 || getLimitAmount() > 50 {
+            stopLoadingIndicator()
+            showAlertMessage(message: "The min limit quote is 1 and the max is 50.")
+        } else {
+            vm?.fetchQuote(limit: getLimitAmount(), completion: { [weak self] result in
+                switch result {
+                case .success(let quote):
+                    self?.loadQuote(quoteData: quote)
+                case .failure(let error):
+                    self?.showError(error: error)
+                }
+            })
+        }
     }
     
-    private func loadQuote(quote:String, author: String) {
-        DispatchQueue.main.async {
-            self.quoteLabel.text = quote
-            self.authorLabel.text = author
-        }
+    private func loadQuote(quoteData:[QuoteModel]) {
+        
         stopLoadingIndicator()
+        
+        if quoteData.count > 1 {
+            //TODO: show quote list
+        } else {
+            let quote = quoteData.first!
+            DispatchQueue.main.async {
+                self.quoteLabel.text = quote.content ?? ""
+                self.authorLabel.text = quote.author ?? ""
+            }
+        }
+        
     }
     
     private func showError(error:Error) {
         stopLoadingIndicator()
-        let alert = UIAlertController(title: "Alert",
-                                      message: "An error occur, pleace try again.",
-                                      preferredStyle: .alert)
-        let confirmButton = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(confirmButton)
-        DispatchQueue.main.async {
-            self.present(alert, animated: true)
-        }
+        showAlertMessage(message: "An unexpected error has occurred. Please try again")
     }
     
     @objc
-    private func searchAuthor() {
-        self.coordinator?.goToAuthorDetails(authorSlug: vm?.getAuthorSlug() ?? "")
+    private func showAuthorDetail() {
+        searchAuthor()
+    }
+    
+    
+    private func searchAuthor(at index:Int = 0) {
+        self.coordinator?.goToAuthorDetails(authorSlug: vm?.getAuthorSlug(index: index) ?? "")
+    }
+    
+    private func getLimitAmount() -> Int {
+        return Int(quotesNumberTextfield.text ?? "1") ?? 1
     }
     
 }
@@ -212,7 +227,9 @@ extension MainVC {
 
 extension MainVC : UITextFieldDelegate {
 
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
 
         switch textField {
         case quotesNumberTextfield:
@@ -247,7 +264,19 @@ extension MainVC {
     }
     
     @objc func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+    }
+}
+
+extension MainVC {
+    private func showAlertMessage(message:String) {
+        let alert = UIAlertController(title: "Alert",
+                                      message: message,
+                                      preferredStyle: .alert)
+        let confirmButton = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(confirmButton)
+        DispatchQueue.main.async {
+            self.present(alert, animated: true)
+        }
     }
 }

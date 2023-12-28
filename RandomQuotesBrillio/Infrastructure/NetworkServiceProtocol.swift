@@ -16,6 +16,7 @@ public protocol EndPoint {
 enum API {
     case quotes
     case author(slug:String)
+    case quotesList(limit:Int)
 }
 
 extension API: EndPoint {
@@ -26,6 +27,8 @@ extension API: EndPoint {
             return "https://api.quotable.io/random"
         case .author:
             return "https://api.quotable.io/authors/slug/\(parameters["slug"] ?? "")"
+        case .quotesList:
+            return "https://api.quotable.io/quotes/random?limit=\(parameters["limit"] ?? "")"
         }
     }
     
@@ -35,6 +38,8 @@ extension API: EndPoint {
             return [:]
         case let .author(slug):
             return ["slug": slug]
+        case .quotesList(limit: let limit):
+            return ["limit": limit]
         }
     }
     

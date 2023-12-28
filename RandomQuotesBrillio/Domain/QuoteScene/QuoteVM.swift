@@ -8,13 +8,14 @@
 import Foundation
 
 protocol input {
-    func fetchQuote(completion: @escaping (QuoteResult) -> Void)
+    func fetchQuote(limit:Int, completion: @escaping (QuoteResult) -> Void)
 }
 
 protocol output {
     var fetchDataCallback:((String, String) -> Void)? { get set }
     var errorCallback:((Error) -> Void)? { get set }
-    func getAuthorSlug() -> String
+    func getAuthorSlug(index:Int) -> String
+    func getQuotesList() -> [QuoteModel]
 }
 
 protocol QuoteVMProtocol: input, output { }
@@ -24,17 +25,17 @@ final class QuoteVM: QuoteVMProtocol {
     var errorCallback: ((Error) -> Void)?
     
     private let useCase:QuotesUseCaseProtocol?
-    private var authorSlug = ""
+    private var quotesList = [QuoteModel]()
     
     init(useCase: QuotesUseCaseProtocol) {
         self.useCase = useCase
     }
     
-    func fetchQuote(completion: @escaping (QuoteResult) -> Void) {
-        self.useCase?.fetchQuote(from: API.quotes, completion: { [weak self] result in
+    func fetchQuote(limit:Int = 0, completion: @escaping (QuoteResult) -> Void) {
+        self.useCase?.fetchQuote(from: API.quotesList(limit: limit), completion: { [weak self] result in
             switch result {
             case .success(let quoteData):
-                self?.authorSlug = quoteData.authorSlug ?? ""
+                self?.quotesList = quoteData
                 completion(.success(quoteData))
             case .failure(let error):
                 completion(.failure(error))
@@ -42,8 +43,12 @@ final class QuoteVM: QuoteVMProtocol {
         })
     }
     
-    func getAuthorSlug() -> String {
-        return self.authorSlug
+    func getAuthorSlug(index:Int = 0) -> String {
+        return quotesList[index].authorSlug ?? ""
+    }
+    
+    func getQuotesList() -> [QuoteModel] {
+        return quotesList
     }
     
 }

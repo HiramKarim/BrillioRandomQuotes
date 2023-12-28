@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "7D8BEAA4-A04E-4875-9693-6FC187B7451D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:RandomQuotesBrillio.xcodeproj",
+      "identifier" : "1F8A03BF2B3B380C00F2E889",
+      "name" : "RandomQuotesBrillio"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:RandomQuotesBrillio.xcodeproj",
+        "identifier" : "1F8A03D52B3B380E00F2E889",
+        "name" : "RandomQuotesBrillioTests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol input {
-    func fetchQuote()
+    func fetchQuote(completion: @escaping (QuoteResult) -> Void)
 }
 
 protocol output {
@@ -30,19 +30,14 @@ final class QuoteVM: QuoteVMProtocol {
         self.useCase = useCase
     }
     
-    func fetchQuote() {
+    func fetchQuote(completion: @escaping (QuoteResult) -> Void) {
         self.useCase?.fetchQuote(from: API.quotes, completion: { [weak self] result in
-            var quoteString = ""
-            var quoteAuthor = ""
             switch result {
             case .success(let quoteData):
-                quoteString = quoteData.content ?? ""
-                quoteAuthor = quoteData.author ?? ""
                 self?.authorSlug = quoteData.authorSlug ?? ""
-                self?.fetchDataCallback?(quoteString, quoteAuthor)
+                completion(.success(quoteData))
             case .failure(let error):
-                self?.errorCallback?(error)
-                break
+                completion(.failure(error))
             }
         })
     }

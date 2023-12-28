@@ -64,6 +64,7 @@
 		1F8ADE1A2B3CC0D50033CE80 /* AuthorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorModel.swift; sourceTree = "<group>"; };
 		1F8ADE1C2B3CC0E40033CE80 /* AuthorVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorVM.swift; sourceTree = "<group>"; };
 		1F8ADE1E2B3CC0F00033CE80 /* AuthorUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorUseCase.swift; sourceTree = "<group>"; };
+		1F8ADE202B3CF0F70033CE80 /* RandomQuotesBrillioTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RandomQuotesBrillioTests.xctestplan; sourceTree = "<group>"; };
 		1FA000822B3B750C002A6763 /* QuotesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotesUseCase.swift; sourceTree = "<group>"; };
 		1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -97,6 +98,7 @@
 		1F8A03B72B3B380C00F2E889 = {
 			isa = PBXGroup;
 			children = (
+				1F8ADE202B3CF0F70033CE80 /* RandomQuotesBrillioTests.xctestplan */,
 				1F8A03C22B3B380C00F2E889 /* RandomQuotesBrillio */,
 				1F8A03D92B3B380E00F2E889 /* RandomQuotesBrillioTests */,
 				1F8A03E32B3B380E00F2E889 /* RandomQuotesBrillioUITests */,

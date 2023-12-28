@@ -84,7 +84,6 @@ final class MainVC: UIViewController {
         super.viewDidLoad()
         
         configView()
-        configCallbacks()
         refreshQuote()
     }
     
@@ -119,18 +118,20 @@ final class MainVC: UIViewController {
         authorLabel.addGestureRecognizer(tapGesture)
     }
     
-    private func configCallbacks() {
-        vm?.fetchDataCallback = reloadQuotes
-        vm?.errorCallback = showError
-    }
-    
     @objc
     private func refreshQuote() {
         startLoadingIndicator()
-        vm?.fetchQuote()
+        vm?.fetchQuote(completion: { [weak self] result in
+            switch result {
+            case .success(let quote):
+                self?.loadQuote(quote: quote.content ?? "", author: quote.author ?? "")
+            case .failure(let error):
+                self?.showError(error: error)
+            }
+        })
     }
     
-    private func reloadQuotes(quote:String, author: String) {
+    private func loadQuote(quote:String, author: String) {
         DispatchQueue.main.async {
             self.quoteLabel.text = quote
             self.authorLabel.text = author

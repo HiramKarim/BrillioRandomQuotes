@@ -59,8 +59,8 @@ final class MainVC: UIViewController {
         return stackView
     }()
     
-    let textview:UITextView = {
-        let textview = UITextView()
+    let quotesNumberTextfield: UITextField = {
+        let textview = UITextField()
         textview.text = "1"
         textview.font = UIFont.systemFont(ofSize: 25)
         textview.textAlignment = .center
@@ -96,6 +96,13 @@ final class MainVC: UIViewController {
         
         configView()
         refreshQuote()
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     private func configView() {
@@ -107,7 +114,7 @@ final class MainVC: UIViewController {
         stackview.addArrangedSubview(quoteLabel)
         stackview.addArrangedSubview(authorLabel)
         stackview.addArrangedSubview(refreshButton)
-        stackview.addArrangedSubview(textview)
+        stackview.addArrangedSubview(quotesNumberTextfield)
         
         NSLayoutConstraint.activate([
             stackview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
@@ -118,8 +125,8 @@ final class MainVC: UIViewController {
             refreshButton.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             refreshButton.heightAnchor.constraint(equalToConstant: 50),
             
-            textview.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
-            textview.heightAnchor.constraint(equalToConstant: 50),
+            quotesNumberTextfield.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
+            quotesNumberTextfield.heightAnchor.constraint(equalToConstant: 50),
             
             loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
@@ -132,9 +139,14 @@ final class MainVC: UIViewController {
         authorLabel.isUserInteractionEnabled = true
         authorLabel.addGestureRecognizer(tapGesture)
         
-        textview.layer.borderColor = UIColor.gray.cgColor
-        textview.layer.borderWidth = 1
-        textview.layer.cornerRadius = 7
+        quotesNumberTextfield.layer.borderColor = UIColor.gray.cgColor
+        quotesNumberTextfield.layer.borderWidth = 1
+        quotesNumberTextfield.layer.cornerRadius = 7
+        quotesNumberTextfield.delegate = self
+        
+        //Looks for single or multiple taps.
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        view.addGestureRecognizer(tap)
     }
     
     @objc
@@ -188,5 +200,47 @@ extension MainVC {
         DispatchQueue.main.async {
             self.loadingIndicator.stopAnimating()
         }
+    }
+}
+
+extension MainVC : UITextFieldDelegate {
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+        switch textField {
+        case quotesNumberTextfield:
+            if ((textField.text?.count)! + (string.count - range.length)) > 2 {
+                return false
+            }
+
+        case quotesNumberTextfield:
+            if ((textField.text?.count)! + (string.count - range.length)) > 1 {
+                return false
+            }
+        default:
+            break
+        }
+        return true
+    }
+}
+
+extension MainVC {
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if self.view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
+    }
+    
+    @objc func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
 }

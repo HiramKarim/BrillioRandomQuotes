@@ -13,8 +13,8 @@ final class MainVC: UIViewController {
     
     private let tableview: UITableView = {
         let tableview = UITableView(frame: .zero)
-        tableview.rowHeight = 50
-        tableview.estimatedRowHeight = 50
+        tableview.rowHeight = 80
+        tableview.estimatedRowHeight = 80
         tableview.translatesAutoresizingMaskIntoConstraints = false
         return tableview
     }()

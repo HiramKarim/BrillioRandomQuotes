@@ -8,7 +8,7 @@
 import Foundation
 
 protocol AuthorInput {
-    func fetchAuthorBio()
+    func fetchAuthorBio(completion: @escaping (AuthorResult) -> Void)
     var authorSlug:String { get set }
 }
 
@@ -35,14 +35,14 @@ final class AuthorVM: AuthorVMProtocol {
         self.authorSlug = authorSlug
     }
     
-    func fetchAuthorBio() {
+    func fetchAuthorBio(completion: @escaping (AuthorResult) -> Void) {
         self.authorUseCase?.fetchAuthorBio(from: API.author(slug: authorSlug), completion: { [weak self] result in
             switch result {
             case .success(let authorData):
                 self?.bioLink = authorData.link ?? ""
-                self?.fetchDataCallback?(authorData)
+                completion(.success(authorData))
             case .failure(let error):
-                self?.errorCallback?(error)
+                completion(.failure(error))
             }
         })
     }

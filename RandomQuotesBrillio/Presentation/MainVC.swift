@@ -59,6 +59,17 @@ final class MainVC: UIViewController {
         return stackView
     }()
     
+    let textview:UITextView = {
+        let textview = UITextView()
+        textview.text = "1"
+        textview.font = UIFont.systemFont(ofSize: 25)
+        textview.textAlignment = .center
+        textview.keyboardType = .numberPad
+        textview.translatesAutoresizingMaskIntoConstraints = false
+        
+        return textview
+    }()
+    
     var vm:QuoteVMProtocol?
     var coordinator:AppCoordinator?
     
@@ -96,6 +107,7 @@ final class MainVC: UIViewController {
         stackview.addArrangedSubview(quoteLabel)
         stackview.addArrangedSubview(authorLabel)
         stackview.addArrangedSubview(refreshButton)
+        stackview.addArrangedSubview(textview)
         
         NSLayoutConstraint.activate([
             stackview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
@@ -105,6 +117,9 @@ final class MainVC: UIViewController {
             
             refreshButton.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             refreshButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            textview.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
+            textview.heightAnchor.constraint(equalToConstant: 50),
             
             loadingIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
@@ -116,6 +131,10 @@ final class MainVC: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(searchAuthor))
         authorLabel.isUserInteractionEnabled = true
         authorLabel.addGestureRecognizer(tapGesture)
+        
+        textview.layer.borderColor = UIColor.gray.cgColor
+        textview.layer.borderWidth = 1
+        textview.layer.cornerRadius = 7
     }
     
     @objc

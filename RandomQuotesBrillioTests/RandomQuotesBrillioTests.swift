@@ -49,6 +49,26 @@ final class RandomQuotesBrillioTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
+    func test_deliversValidAuthorBioForValidURL() {
+        let networkServiceMock = NetworkServiceMock()
+        let usecase = AuthorUseCase(networkService: networkServiceMock)
+        let sut = AuthorVM(authorUseCase: usecase, authorSlug: "charles-dickens")
+        
+        let exp = expectation(description: "waiting for response")
+        
+        sut.fetchAuthorBio { result in
+            switch result {
+            case .success(let author):
+                XCTAssertNotNil(author)
+            case .failure(let error):
+                XCTAssertNil(error)
+            }
+            exp.fulfill()
+        }
+        
+        wait(for: [exp], timeout: 1.0)
+    }
+    
     func test_deliversErrorForInvalidURL() {
         let networkServiceMock = NetworkServiceMock()
         let sut = QuotesUseCase(networkService: networkServiceMock)

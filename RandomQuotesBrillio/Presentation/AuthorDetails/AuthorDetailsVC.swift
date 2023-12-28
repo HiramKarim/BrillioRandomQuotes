@@ -103,7 +103,14 @@ final class AuthorDetailsVC: UIViewController {
     
     private func fetchAuthorInformation() {
         startLoadingIndicator()
-        vm?.fetchAuthorBio()
+        vm?.fetchAuthorBio(completion: { [weak self] result in
+            switch result {
+            case .success(let authorData):
+                self?.loadAuthorInformation(authorModel: authorData)
+            case .failure(let error):
+                self?.showError(error: error)
+            }
+        })
     }
     
     private func loadAuthorInformation(authorModel:AuthorModel) {

@@ -5,6 +5,18 @@
 //  Created by Hiram Castro on 26/12/23.
 //
 
+/*
+ His take home challenge is very good as well,
+ - Good modularization.
+ - Good choice of Coordinators for managing screens.
+ - Good understanding of layout constraints.
+ - Good with HTTPClientResult wrapper for cleaner code.
+ - Good handling of input constraints for the text field.
+  == Overall good understanding of memory handling with correct use of [weak self] ==
+ Noticed there was no removeCoordinator function, which would lead to memory leaks, be careful with that. Some parts for code could be DRYer (eg parsing JSON could be added to a more generic network/parsing layer or common VC/UI setup behavior added to extensions/base class).
+ Minor: Would have liked to see a more robust error handling as a take home. Also noticed an inconsistent coding style, easily solved with a linter
+ */
+
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

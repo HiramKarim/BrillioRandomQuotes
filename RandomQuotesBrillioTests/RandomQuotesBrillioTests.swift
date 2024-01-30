@@ -133,15 +133,41 @@ class NetworkServiceMock: NetworkServiceProtocol {
     func fetchData(from endpoint: RandomQuotesBrillio.EndPoint,
                     completion: @escaping (RandomQuotesBrillio.HTTPClientResult) -> Void) {
         
-        if endpoint.path == "http://a-valid-quote-url.com" {
-            let quotesData: [String:Any] = [
-                "_id": "d5mCJQDeQb", "content": "A poem begins in delight and ends in wisdom.", "author": "Robert Frost", "authorSlug" : "charles-dickens"
-            ]
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: quotesData, options: .prettyPrinted) else {
-                  print("Something is wrong while converting dictionary to JSON data.")
-                completion(.failure(NetworkError.genericError))
-                return
-               }
+        if endpoint.path == "http://a-valid-quote-url.com" ||
+            endpoint.path.contains("https://api.quotable.io/quotes/random?limit="){
+            
+            let jsonString = """
+            [{
+                "_id":"yW0uii1d-O",
+                "author":"Woody Allen",
+                "content":"Interestingly, according to modern astronomers, space is finite. This is a very comforting thought-- particularly for people who can never remember where they have left things.",
+                "tags":["Film"],
+                "authorSlug":"woody-allen",
+                "length":176,
+                "dateAdded":"2019-03-17",
+                "dateModified":"2023-04-14"
+            }]
+            """
+            
+            let jsonData = Data(jsonString.utf8)
+            
+            completion(.success(jsonData, HTTPURLResponse(url: URL(string: mockAPI.quoteURL.path)!,
+                                                          statusCode: 200,
+                                                          httpVersion: nil,
+                                                          headerFields: nil)!))
+        } else if endpoint.path.contains("https://api.quotable.io/authors/slug/") {
+            let jsonString = """
+            {
+                "_id":"yW0uii1d-O",
+                "name":"Woody Allen",
+                "link":"www.a-link.com",
+                "bio":"some bio...",
+                "slug":"woody-allen"
+            }
+            """
+            
+            let jsonData = Data(jsonString.utf8)
+            
             completion(.success(jsonData, HTTPURLResponse(url: URL(string: mockAPI.quoteURL.path)!,
                                                           statusCode: 200,
                                                           httpVersion: nil,

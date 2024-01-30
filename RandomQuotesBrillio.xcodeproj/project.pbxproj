@@ -25,6 +25,7 @@
 		1FA000832B3B750C002A6763 /* QuotesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000822B3B750C002A6763 /* QuotesUseCase.swift */; };
 		1FA000852B3B775C002A6763 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */; };
 		1FA000882B3B8AF9002A6763 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */; };
+		1FBB46272B590B14008E9596 /* RandomQuotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FBB46262B590B14008E9596 /* RandomQuotesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,13 @@
 			remoteInfo = RandomQuotesBrillio;
 		};
 		1F8A03E12B3B380E00F2E889 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1F8A03B82B3B380C00F2E889 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F8A03BF2B3B380C00F2E889;
+			remoteInfo = RandomQuotesBrillio;
+		};
+		1FBB46282B590B14008E9596 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1F8A03B82B3B380C00F2E889 /* Project object */;
 			proxyType = 1;
@@ -68,6 +76,9 @@
 		1FA000822B3B750C002A6763 /* QuotesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotesUseCase.swift; sourceTree = "<group>"; };
 		1FA000842B3B775B002A6763 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		1FA000872B3B8AF9002A6763 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		1FBB46242B590B13008E9596 /* RandomQuotesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RandomQuotesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FBB46262B590B14008E9596 /* RandomQuotesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomQuotesTests.swift; sourceTree = "<group>"; };
+		1FBB462D2B590BC3008E9596 /* RandomQuotesTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = file; path = RandomQuotesTests.xctestplan; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,16 +103,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1FBB46212B590B13008E9596 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		1F8A03B72B3B380C00F2E889 = {
 			isa = PBXGroup;
 			children = (
-				1F8ADE202B3CF0F70033CE80 /* RandomQuotesBrillioTests.xctestplan */,
 				1F8A03C22B3B380C00F2E889 /* RandomQuotesBrillio */,
 				1F8A03D92B3B380E00F2E889 /* RandomQuotesBrillioTests */,
 				1F8A03E32B3B380E00F2E889 /* RandomQuotesBrillioUITests */,
+				1FBB46252B590B14008E9596 /* RandomQuotesTests */,
 				1F8A03C12B3B380C00F2E889 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +130,7 @@
 				1F8A03C02B3B380C00F2E889 /* RandomQuotesBrillio.app */,
 				1F8A03D62B3B380E00F2E889 /* RandomQuotesBrillioTests.xctest */,
 				1F8A03E02B3B380E00F2E889 /* RandomQuotesBrillioUITests.xctest */,
+				1FBB46242B590B13008E9596 /* RandomQuotesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -135,6 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				1F8A03DA2B3B380E00F2E889 /* RandomQuotesBrillioTests.swift */,
+				1F8ADE202B3CF0F70033CE80 /* RandomQuotesBrillioTests.xctestplan */,
 			);
 			path = RandomQuotesBrillioTests;
 			sourceTree = "<group>";
@@ -212,6 +232,15 @@
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
+		1FBB46252B590B14008E9596 /* RandomQuotesTests */ = {
+			isa = PBXGroup;
+			children = (
+				1FBB46262B590B14008E9596 /* RandomQuotesTests.swift */,
+				1FBB462D2B590BC3008E9596 /* RandomQuotesTests.xctestplan */,
+			);
+			path = RandomQuotesTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -268,6 +297,24 @@
 			productReference = 1F8A03E02B3B380E00F2E889 /* RandomQuotesBrillioUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		1FBB46232B590B13008E9596 /* RandomQuotesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1FBB462C2B590B14008E9596 /* Build configuration list for PBXNativeTarget "RandomQuotesTests" */;
+			buildPhases = (
+				1FBB46202B590B13008E9596 /* Sources */,
+				1FBB46212B590B13008E9596 /* Frameworks */,
+				1FBB46222B590B13008E9596 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1FBB46292B590B14008E9596 /* PBXTargetDependency */,
+			);
+			name = RandomQuotesTests;
+			productName = RandomQuotesTests;
+			productReference = 1FBB46242B590B13008E9596 /* RandomQuotesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -289,6 +336,10 @@
 						CreatedOnToolsVersion = 14.3.1;
 						TestTargetID = 1F8A03BF2B3B380C00F2E889;
 					};
+					1FBB46232B590B13008E9596 = {
+						CreatedOnToolsVersion = 14.3.1;
+						TestTargetID = 1F8A03BF2B3B380C00F2E889;
+					};
 				};
 			};
 			buildConfigurationList = 1F8A03BB2B3B380C00F2E889 /* Build configuration list for PBXProject "RandomQuotesBrillio" */;
@@ -307,6 +358,7 @@
 				1F8A03BF2B3B380C00F2E889 /* RandomQuotesBrillio */,
 				1F8A03D52B3B380E00F2E889 /* RandomQuotesBrillioTests */,
 				1F8A03DF2B3B380E00F2E889 /* RandomQuotesBrillioUITests */,
+				1FBB46232B590B13008E9596 /* RandomQuotesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -329,6 +381,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1F8A03DE2B3B380E00F2E889 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1FBB46222B590B13008E9596 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -375,6 +434,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1FBB46202B590B13008E9596 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FBB46272B590B14008E9596 /* RandomQuotesTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -387,6 +454,11 @@
 			isa = PBXTargetDependency;
 			target = 1F8A03BF2B3B380C00F2E889 /* RandomQuotesBrillio */;
 			targetProxy = 1F8A03E12B3B380E00F2E889 /* PBXContainerItemProxy */;
+		};
+		1FBB46292B590B14008E9596 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1F8A03BF2B3B380C00F2E889 /* RandomQuotesBrillio */;
+			targetProxy = 1FBB46282B590B14008E9596 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -646,6 +718,48 @@
 			};
 			name = Release;
 		};
+		1FBB462A2B590B14008E9596 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SNTB2L8C6Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hcdev.RandomQuotesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RandomQuotesBrillio.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RandomQuotesBrillio";
+			};
+			name = Debug;
+		};
+		1FBB462B2B590B14008E9596 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SNTB2L8C6Q;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hcdev.RandomQuotesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RandomQuotesBrillio.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RandomQuotesBrillio";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -681,6 +795,15 @@
 			buildConfigurations = (
 				1F8A03F12B3B380E00F2E889 /* Debug */,
 				1F8A03F22B3B380E00F2E889 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1FBB462C2B590B14008E9596 /* Build configuration list for PBXNativeTarget "RandomQuotesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1FBB462A2B590B14008E9596 /* Debug */,
+				1FBB462B2B590B14008E9596 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

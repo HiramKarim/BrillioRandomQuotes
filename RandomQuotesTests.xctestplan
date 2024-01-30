@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "0460EB38-94A3-4E77-BB54-9E0FC62E68ED",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:RandomQuotesBrillio.xcodeproj",
+        "identifier" : "1FBB46232B590B13008E9596",
+        "name" : "RandomQuotesTests"
+      }
+    }
+  ],
+  "version" : 1
+}

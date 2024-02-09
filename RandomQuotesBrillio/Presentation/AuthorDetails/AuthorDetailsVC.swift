@@ -42,13 +42,16 @@ final class AuthorDetailsVC: UIViewController {
     }()
     
     var vm:AuthorVMProtocol?
+    var coordinator: AppCoordinator?
     
     deinit {
         self.vm = nil
     }
     
-    init(vm:AuthorVMProtocol) {
+    init(vm:AuthorVMProtocol,
+         coordinator: AppCoordinator) {
         self.vm = vm
+        self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
     }
     

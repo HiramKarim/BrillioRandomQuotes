@@ -14,6 +14,37 @@ protocol Coordinator: AnyObject {
     func start()
 }
 
+protocol CoordinatorFinish: AnyObject {
+    func finish()
+}
+
+class AppCoordinator: Coordinator {
+    var childCoordinators: [Coordinator]
+    
+    var navigationController: UINavigationController
+    
+    init(navigationController: UINavigationController) {
+        self.childCoordinators = []
+        self.navigationController = navigationController
+    }
+    
+    func start() {
+        let quoteCoordinator = QuoteCoordinator(navigationController: navigationController)
+        quoteCoordinator.childCoordinators.append(self)
+        quoteCoordinator.start()
+        childCoordinators.append(quoteCoordinator)
+    }
+}
+
+extension AppCoordinator {
+    func goToAuthorDetails(authorSlug:String = "") {
+        let authorCoordinator = AuthorCoordinator(navigationController: navigationController)
+        authorCoordinator.loadParameters(authorSlug: authorSlug)
+        authorCoordinator.start()
+        childCoordinators.append(authorCoordinator)
+    }
+}
+
 class QuoteCoordinator: Coordinator {
     var childCoordinators: [Coordinator]
     
@@ -49,7 +80,7 @@ class AuthorCoordinator: Coordinator {
         let networkManager: NetworkServiceProtocol = Network()
         let useCase: AuthorUseCaseProtocol = AuthorUseCase(networkService: networkManager)
         let viewModel: AuthorVMProtocol = AuthorVM(authorUseCase: useCase, authorSlug: self.authorSlug)
-        let authorDetails = AuthorDetailsVC(vm: viewModel)
+        let authorDetails = AuthorDetailsVC(vm: viewModel, coordinator: <#AppCoordinator#>)
         self.navigationController.pushViewController(authorDetails, animated: true)
     }
 }
@@ -60,30 +91,8 @@ extension AuthorCoordinator {
     }
 }
 
-
-class AppCoordinator: Coordinator {
-    var childCoordinators: [Coordinator]
-    
-    var navigationController: UINavigationController
-    
-    init(navigationController: UINavigationController) {
-        self.childCoordinators = []
-        self.navigationController = navigationController
-    }
-    
-    func start() {
-        let quoteCoordinator = QuoteCoordinator(navigationController: navigationController)
-        quoteCoordinator.childCoordinators.append(self)
-        quoteCoordinator.start()
-        childCoordinators.append(quoteCoordinator)
-    }
-}
-
-extension AppCoordinator {
-    func goToAuthorDetails(authorSlug:String = "") {
-        let authorCoordinator = AuthorCoordinator(navigationController: navigationController)
-        authorCoordinator.loadParameters(authorSlug: authorSlug)
-        authorCoordinator.start()
-        childCoordinators.append(authorCoordinator)
+extension AuthorCoordinator: CoordinatorFinish {
+    func finish() {
+        self.childCoordinators.removeAll()
     }
 }

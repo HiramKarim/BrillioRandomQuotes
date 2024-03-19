@@ -81,7 +81,7 @@ final class MainVC: UIViewController {
     }()
     
     private var vm:QuoteVMProtocol?
-    private var coordinator:MainCoordinatorProtocol?
+    private var coordinator:QuoteNavCoordinator?
     
     deinit {
         vm?.fetchDataCallback = nil
@@ -91,7 +91,7 @@ final class MainVC: UIViewController {
     }
     
     init(vm: QuoteVMProtocol?,
-         coordinator:MainCoordinatorProtocol) {
+         coordinator:QuoteNavCoordinator) {
         self.vm = vm
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)

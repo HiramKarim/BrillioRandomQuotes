@@ -7,25 +7,15 @@
 
 import UIKit
 
-protocol CoordinatorProtocol: AnyObject {
+protocol CoordinatorProtocol {
+    var childCoordinators: [CoordinatorProtocol] { get set }
     var navigationController: UINavigationController { get set }
     
     func start()
-}
-
-protocol ChildCoordinatorsProtocol: AnyObject {
-    var childCoordinators: [CoordinatorProtocol] { get set }
-}
-
-protocol CoordinatorFinishProtocol: AnyObject {
     func finish()
 }
 
-protocol MainCoordinatorProtocol: CoordinatorProtocol, 
-                                    ChildCoordinatorsProtocol,
-                                    CoordinatorFinishProtocol {}
-
-class AppCoordinator: MainCoordinatorProtocol {
+class AppCoordinator: CoordinatorProtocol {
     var childCoordinators: [CoordinatorProtocol]
     
     var navigationController: UINavigationController
@@ -47,65 +37,62 @@ class AppCoordinator: MainCoordinatorProtocol {
     }
 }
 
-extension MainCoordinatorProtocol {
-    func goToAuthorDetails(authorSlug:String = "") {
-        let authorCoordinator = AuthorCoordinator(navigationController: navigationController, 
-                                                  appCoordinator: self)
-        authorCoordinator.loadParameters(authorSlug: authorSlug)
-        authorCoordinator.start()
-        childCoordinators.append(authorCoordinator)
-    }
+protocol QuoteCoordinatorProtocol {
+    func goToAuthorDetails(authorSlug: String)
 }
 
-extension MainCoordinatorProtocol {
-    func removeLast() {
-        self.childCoordinators.removeLast()
-    }
-}
+protocol QuoteNavCoordinator: CoordinatorProtocol, QuoteCoordinatorProtocol {}
 
-class QuoteCoordinator: CoordinatorProtocol {
-    private weak var appCoordinator: MainCoordinatorProtocol?
+class QuoteCoordinator: QuoteNavCoordinator {
+    var childCoordinators: [CoordinatorProtocol]
+    private var appCoordinator: CoordinatorProtocol?
     var navigationController: UINavigationController
     
     init(navigationController: UINavigationController,
-         appCoordinator: MainCoordinatorProtocol?) {
+         appCoordinator: CoordinatorProtocol?) {
+        self.childCoordinators = []
         self.appCoordinator = appCoordinator
         self.navigationController = navigationController
     }
     
     func start() {
-        let networkManager:NetworkServiceProtocol = Network()
-        let useCase:QuotesUseCaseProtocol = QuotesUseCase(networkService: networkManager)
-        let viewModel: QuoteVMProtocol = QuoteVM(useCase: useCase)
-        
         guard let mainVC = buildAuthor()
         else { return }
-        
         self.navigationController.pushViewController(mainVC, animated: true)
     }
-}
-
-extension QuoteCoordinator {
-    private func buildAuthor() -> MainVC? {
+    
+    func finish() {
+        childCoordinators.removeAll()
+    }
+    
+    func goToAuthorDetails(authorSlug:String = "") {
+        guard let appCoordinator = appCoordinator else { return }
+        let authorCoordinator = AuthorCoordinator(navigationController: navigationController,
+                                                  appCoordinator: appCoordinator)
+        authorCoordinator.loadParameters(authorSlug: authorSlug)
+        authorCoordinator.start()
+        childCoordinators.append(authorCoordinator)
+    }
+    
+    internal func buildAuthor() -> MainVC? {
         let networkManager:NetworkServiceProtocol = Network()
         let useCase:QuotesUseCaseProtocol = QuotesUseCase(networkService: networkManager)
         let viewModel: QuoteVMProtocol = QuoteVM(useCase: useCase)
-        
-        guard let appCoordinator = appCoordinator
-        else { return nil }
-        
-        return  MainVC(vm: viewModel, coordinator: appCoordinator)
+        return  MainVC(vm: viewModel, coordinator: self)
     }
 }
 
-class AuthorCoordinator: CoordinatorProtocol {
-    private weak var appCoordinator: MainCoordinatorProtocol?
+protocol AutorNavCoordinator: CoordinatorProtocol {}
+
+class AuthorCoordinator: AutorNavCoordinator {
+    var childCoordinators: [any CoordinatorProtocol]
+    private var appCoordinator: CoordinatorProtocol?
     var navigationController: UINavigationController
-    
     var authorSlug:String = ""
     
     init(navigationController: UINavigationController,
-         appCoordinator: MainCoordinatorProtocol?) {
+         appCoordinator: CoordinatorProtocol?) {
+        self.childCoordinators = []
         self.appCoordinator = appCoordinator
         self.navigationController = navigationController
     }
@@ -114,29 +101,21 @@ class AuthorCoordinator: CoordinatorProtocol {
         guard let authorDetailsVC = createAuthor() else { return }
         self.navigationController.pushViewController(authorDetailsVC, animated: true)
     }
+    
+    func finish() {
+        self.navigationController.popViewController(animated: true)
+    }
 }
 
 extension AuthorCoordinator {
     func loadParameters(authorSlug:String) {
         self.authorSlug = authorSlug
     }
-}
-
-extension AuthorCoordinator {
+    
     private func createAuthor() -> AuthorDetailsVC? {
         let networkManager: NetworkServiceProtocol = Network()
         let useCase: AuthorUseCaseProtocol = AuthorUseCase(networkService: networkManager)
         let viewModel: AuthorVMProtocol = AuthorVM(authorUseCase: useCase, authorSlug: self.authorSlug)
-        
-        guard let appCoordinator = appCoordinator
-        else { return nil }
-        
-        return AuthorDetailsVC(vm: viewModel, coordinator: appCoordinator)
-    }
-}
-
-extension AuthorCoordinator: CoordinatorFinishProtocol {
-    func finish() {
-        self.navigationController.popViewController(animated: true)
+        return AuthorDetailsVC(vm: viewModel, coordinator: self)
     }
 }

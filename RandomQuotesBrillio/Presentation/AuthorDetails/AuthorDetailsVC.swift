@@ -42,7 +42,7 @@ final class AuthorDetailsVC: UIViewController {
     }()
     
     var vm:AuthorVMProtocol?
-    var coordinator: MainCoordinatorProtocol?
+    var coordinator: AutorNavCoordinator?
     
     deinit {
         self.vm = nil
@@ -50,7 +50,7 @@ final class AuthorDetailsVC: UIViewController {
     }
     
     init(vm:AuthorVMProtocol,
-         coordinator: MainCoordinatorProtocol) {
+         coordinator: AutorNavCoordinator) {
         self.vm = vm
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
@@ -61,7 +61,7 @@ final class AuthorDetailsVC: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        self.coordinator?.removeLast()
+        self.coordinator?.finish()
     }
     
     override func viewDidLoad() {

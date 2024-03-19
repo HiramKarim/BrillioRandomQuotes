@@ -42,14 +42,15 @@ final class AuthorDetailsVC: UIViewController {
     }()
     
     var vm:AuthorVMProtocol?
-    var coordinator: AppCoordinator?
+    var coordinator: MainCoordinatorProtocol?
     
     deinit {
         self.vm = nil
+        self.coordinator = nil
     }
     
     init(vm:AuthorVMProtocol,
-         coordinator: AppCoordinator) {
+         coordinator: MainCoordinatorProtocol) {
         self.vm = vm
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
@@ -57,6 +58,10 @@ final class AuthorDetailsVC: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.coordinator?.removeLast()
     }
     
     override func viewDidLoad() {

@@ -13,8 +13,8 @@ final class MainVC: UIViewController {
     
     private let tableview: UITableView = {
         let tableview = UITableView(frame: .zero)
-        tableview.rowHeight = 80
-        tableview.estimatedRowHeight = 80
+        tableview.estimatedRowHeight = 100
+        tableview.rowHeight = UITableView.automaticDimension
         tableview.translatesAutoresizingMaskIntoConstraints = false
         return tableview
     }()
@@ -81,7 +81,7 @@ final class MainVC: UIViewController {
     }()
     
     private var vm:QuoteVMProtocol?
-    private var coordinator:AppCoordinator?
+    private var coordinator:MainCoordinatorProtocol?
     
     deinit {
         vm?.fetchDataCallback = nil
@@ -91,7 +91,7 @@ final class MainVC: UIViewController {
     }
     
     init(vm: QuoteVMProtocol?,
-         coordinator:AppCoordinator) {
+         coordinator:MainCoordinatorProtocol) {
         self.vm = vm
         self.coordinator = coordinator
         super.init(nibName: nil, bundle: nil)
@@ -141,15 +141,15 @@ final class MainVC: UIViewController {
             stackview.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
             stackview.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
             
-            tableview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
-            tableview.centerYAnchor.constraint(equalTo: self.view.centerYAnchor, constant: 0),
-            tableview.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
-            tableview.heightAnchor.constraint(equalToConstant: 150),
-            
             refreshButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
             refreshButton.topAnchor.constraint(equalTo: stackview.bottomAnchor, constant: 25),
             refreshButton.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             refreshButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            tableview.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
+            tableview.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 0),
+            tableview.bottomAnchor.constraint(equalTo: refreshButton.topAnchor, constant: 0),
+            tableview.widthAnchor.constraint(equalToConstant: self.view.frame.width * 0.90),
             
             quotesNumberTextfield.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 0),
             quotesNumberTextfield.topAnchor.constraint(equalTo: refreshButton.bottomAnchor, constant: 25),
@@ -233,7 +233,9 @@ final class MainVC: UIViewController {
     
     
     private func searchAuthor(at index:Int = 0) {
-        self.coordinator?.goToAuthorDetails(authorSlug: vm?.getAuthorSlug(index: index) ?? "")
+        guard let authorSlug = vm?.getAuthorSlug(index: index)
+        else { return }
+        self.coordinator?.goToAuthorDetails(authorSlug: authorSlug)
     }
     
     private func getLimitAmount() -> Int {
@@ -321,7 +323,8 @@ extension MainVC: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         let quote = vm?.getQuote(index: indexPath.row)
         cell.textLabel?.text = "\(quote?.content ?? "") - \(quote?.author ?? "")"
-        
+        cell.sizeToFit()
+        cell.layoutIfNeeded()
         return cell
     }
 }
@@ -330,4 +333,12 @@ extension MainVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         searchAuthor(at: indexPath.row)
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+}
+
+class CustomCell: UITableViewCell {
+    
 }

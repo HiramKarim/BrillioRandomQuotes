@@ -7,19 +7,26 @@
 
 import UIKit
 
-protocol Coordinator: AnyObject {
-    var childCoordinators: [Coordinator] { get set }
+protocol CoordinatorProtocol: AnyObject {
     var navigationController: UINavigationController { get set }
     
     func start()
 }
 
-protocol CoordinatorFinish: AnyObject {
+protocol ChildCoordinatorsProtocol: AnyObject {
+    var childCoordinators: [CoordinatorProtocol] { get set }
+}
+
+protocol CoordinatorFinishProtocol: AnyObject {
     func finish()
 }
 
-class AppCoordinator: Coordinator {
-    var childCoordinators: [Coordinator]
+protocol MainCoordinatorProtocol: CoordinatorProtocol, 
+                                    ChildCoordinatorsProtocol,
+                                    CoordinatorFinishProtocol {}
+
+class AppCoordinator: MainCoordinatorProtocol {
+    var childCoordinators: [CoordinatorProtocol]
     
     var navigationController: UINavigationController
     
@@ -29,29 +36,40 @@ class AppCoordinator: Coordinator {
     }
     
     func start() {
-        let quoteCoordinator = QuoteCoordinator(navigationController: navigationController)
-        quoteCoordinator.childCoordinators.append(self)
+        let quoteCoordinator = QuoteCoordinator(navigationController: navigationController,
+                                                appCoordinator: self)
         quoteCoordinator.start()
         childCoordinators.append(quoteCoordinator)
     }
+    
+    func finish() {
+        childCoordinators.removeAll()
+    }
 }
 
-extension AppCoordinator {
+extension MainCoordinatorProtocol {
     func goToAuthorDetails(authorSlug:String = "") {
-        let authorCoordinator = AuthorCoordinator(navigationController: navigationController)
+        let authorCoordinator = AuthorCoordinator(navigationController: navigationController, 
+                                                  appCoordinator: self)
         authorCoordinator.loadParameters(authorSlug: authorSlug)
         authorCoordinator.start()
         childCoordinators.append(authorCoordinator)
     }
 }
 
-class QuoteCoordinator: Coordinator {
-    var childCoordinators: [Coordinator]
-    
+extension MainCoordinatorProtocol {
+    func removeLast() {
+        self.childCoordinators.removeLast()
+    }
+}
+
+class QuoteCoordinator: CoordinatorProtocol {
+    private weak var appCoordinator: MainCoordinatorProtocol?
     var navigationController: UINavigationController
     
-    init(navigationController: UINavigationController) {
-        self.childCoordinators = []
+    init(navigationController: UINavigationController,
+         appCoordinator: MainCoordinatorProtocol?) {
+        self.appCoordinator = appCoordinator
         self.navigationController = navigationController
     }
     
@@ -59,29 +77,42 @@ class QuoteCoordinator: Coordinator {
         let networkManager:NetworkServiceProtocol = Network()
         let useCase:QuotesUseCaseProtocol = QuotesUseCase(networkService: networkManager)
         let viewModel: QuoteVMProtocol = QuoteVM(useCase: useCase)
-        let mainVC = MainVC(vm: viewModel, coordinator: childCoordinators.first! as! AppCoordinator)
+        
+        guard let mainVC = buildAuthor()
+        else { return }
         
         self.navigationController.pushViewController(mainVC, animated: true)
     }
 }
 
-class AuthorCoordinator: Coordinator {
-    var childCoordinators: [Coordinator]
+extension QuoteCoordinator {
+    private func buildAuthor() -> MainVC? {
+        let networkManager:NetworkServiceProtocol = Network()
+        let useCase:QuotesUseCaseProtocol = QuotesUseCase(networkService: networkManager)
+        let viewModel: QuoteVMProtocol = QuoteVM(useCase: useCase)
+        
+        guard let appCoordinator = appCoordinator
+        else { return nil }
+        
+        return  MainVC(vm: viewModel, coordinator: appCoordinator)
+    }
+}
+
+class AuthorCoordinator: CoordinatorProtocol {
+    private weak var appCoordinator: MainCoordinatorProtocol?
     var navigationController: UINavigationController
     
     var authorSlug:String = ""
     
-    init(navigationController: UINavigationController) {
-        self.childCoordinators = []
+    init(navigationController: UINavigationController,
+         appCoordinator: MainCoordinatorProtocol?) {
+        self.appCoordinator = appCoordinator
         self.navigationController = navigationController
     }
     
     func start() {
-        let networkManager: NetworkServiceProtocol = Network()
-        let useCase: AuthorUseCaseProtocol = AuthorUseCase(networkService: networkManager)
-        let viewModel: AuthorVMProtocol = AuthorVM(authorUseCase: useCase, authorSlug: self.authorSlug)
-        let authorDetails = AuthorDetailsVC(vm: viewModel, coordinator: <#AppCoordinator#>)
-        self.navigationController.pushViewController(authorDetails, animated: true)
+        guard let authorDetailsVC = createAuthor() else { return }
+        self.navigationController.pushViewController(authorDetailsVC, animated: true)
     }
 }
 
@@ -91,8 +122,21 @@ extension AuthorCoordinator {
     }
 }
 
-extension AuthorCoordinator: CoordinatorFinish {
+extension AuthorCoordinator {
+    private func createAuthor() -> AuthorDetailsVC? {
+        let networkManager: NetworkServiceProtocol = Network()
+        let useCase: AuthorUseCaseProtocol = AuthorUseCase(networkService: networkManager)
+        let viewModel: AuthorVMProtocol = AuthorVM(authorUseCase: useCase, authorSlug: self.authorSlug)
+        
+        guard let appCoordinator = appCoordinator
+        else { return nil }
+        
+        return AuthorDetailsVC(vm: viewModel, coordinator: appCoordinator)
+    }
+}
+
+extension AuthorCoordinator: CoordinatorFinishProtocol {
     func finish() {
-        self.childCoordinators.removeAll()
+        self.navigationController.popViewController(animated: true)
     }
 }

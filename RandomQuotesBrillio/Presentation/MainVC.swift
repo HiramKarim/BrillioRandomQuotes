@@ -9,12 +9,13 @@ import UIKit
 
 final class MainVC: UIViewController {
     
-    private let cellIdentifier = "cell"
+    private let cellIdentifier = "QuoteCell"
     
     private let tableview: UITableView = {
         let tableview = UITableView(frame: .zero)
         tableview.estimatedRowHeight = 100
         tableview.rowHeight = UITableView.automaticDimension
+        tableview.separatorStyle = .none
         tableview.translatesAutoresizingMaskIntoConstraints = false
         return tableview
     }()
@@ -175,7 +176,7 @@ final class MainVC: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
         view.addGestureRecognizer(tap)
         
-        tableview.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableview.register(QuoteCell.self, forCellReuseIdentifier: cellIdentifier)
         tableview.isHidden = true
         tableview.delegate = self
         tableview.dataSource = self
@@ -320,11 +321,17 @@ extension MainVC: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let quote = vm?.getQuote(index: indexPath.row)
-        cell.textLabel?.text = "\(quote?.content ?? "") - \(quote?.author ?? "")"
-        cell.sizeToFit()
-        cell.layoutIfNeeded()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? QuoteCell,
+              let quote = vm?.getQuote(index: indexPath.row),
+              let quoteText = quote.content,
+              let quoteAuthor = quote.author
+        else {
+            return UITableViewCell()
+        }
+        
+        cell.bindQuote(quoteText: quoteText, 
+                       quoteAuthor: quoteAuthor)
+        
         return cell
     }
 }
@@ -339,6 +346,60 @@ extension MainVC: UITableViewDelegate {
     }
 }
 
-class CustomCell: UITableViewCell {
+class QuoteCell: UITableViewCell {
     
+    private let quoteText: UILabel = {
+       let label = UILabel()
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    private let quoteAuthor: UILabel = {
+       let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.font = UIFont.italicSystemFont(ofSize: 12)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        configCell()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configCell() {
+        let separatorView = UIView()
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.contentView.addSubview(quoteText)
+        self.contentView.addSubview(quoteAuthor)
+        self.contentView.addSubview(separatorView)
+        
+        NSLayoutConstraint.activate([
+            separatorView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
+            separatorView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
+            separatorView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+            separatorView.heightAnchor.constraint(equalToConstant: 10),
+            quoteAuthor.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
+            quoteAuthor.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: 0),
+            quoteText.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
+            quoteText.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 10),
+            quoteText.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
+            quoteText.bottomAnchor.constraint(equalTo: quoteAuthor.topAnchor, constant: -10),
+        ])
+    }
+    
+    func bindQuote(quoteText text:String, quoteAuthor author: String) {
+        quoteText.text = text
+        quoteAuthor.text = author
+    }
 }
